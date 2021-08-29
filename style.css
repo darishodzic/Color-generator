@@ -27,7 +27,7 @@ i {
 	flex: 1;
 	flex-direction: column;
 	align-items: center;
-	justify-content: space-evenly;
+	justify-content: center;
 	position: relative;
 	overflow: hidden;
 }
@@ -42,13 +42,13 @@ i {
 	position: absolute;
 	bottom: 0%;
 	background-color: rgb(255, 255, 255);
-	opacity: 0;
 	padding: 1rem;
 	width: 80%;
-	pointer-events: none;
 	border-top-right-radius: 1rem;
 	border-top-left-radius: 1rem;
-	transform: translateY(100px);
+	/* pointer-events: none;
+	opacity: 0;
+	transform: translateY(100px); */
 	transition: all 0.5s ease-in-out;
 }
 
@@ -114,4 +114,21 @@ i {
 	background: none;
 	cursor: pointer;
 	margin: 1rem 0rem;
+}
+
+.adjust {
+	margin-top: 7rem;
+}
+.lock {
+	margin-bottom: 5rem;
+}
+
+/* slider */
+input[type="range"] {
+	-webkit-appearance: none;
+	margin: 0.5rem 0rem;
+	width: 100%;
+	position: relative;
+	border-radius: 1rem;
+	cursor: pointer;
 }
