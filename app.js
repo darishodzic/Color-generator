@@ -12,7 +12,31 @@ const currentHexes =
 		".color h2"
 	);
 let initialColors;
-//Functions
+
+//add event listeners
+sliders.forEach((slider) => {
+	slider.addEventListener(
+		"input",
+		hslControl
+	);
+});
+
+colorDivs.forEach((slider, index) => {
+	slider.addEventListener(
+		"change",
+		() => {
+			updateTextUi(index);
+		}
+	);
+});
+
+currentHexes.forEach((hex) => {
+	hex.addEventListener("click", () => {
+		copyToClipboard(hex);
+	});
+});
+
+//FUNCTIONS
 
 //Color generator
 function generateHex() {
@@ -21,10 +45,13 @@ function generateHex() {
 }
 
 function randomColors() {
+	initialColors = [];
 	colorDivs.forEach((div, index) => {
 		const hexText = div.children[0];
 		const randomColor = generateHex();
-
+		initialColors.push(
+			chroma(randomColor).hex()
+		);
 		//add the coloro to the bg
 		div.style.backgroundColor =
 			randomColor;
@@ -50,6 +77,8 @@ function randomColors() {
 			saturation
 		);
 	});
+	//reset inputs
+	resetInputs();
 }
 
 function checkTextContrast(
@@ -79,11 +108,133 @@ function colorizeSliders(
 		color,
 		fullSat,
 	]);
+	//scale brightness
+	const midBright = color.set(
+		"hsl.l",
+		0.5
+	);
+	const scaleBright = chroma.scale([
+		"black",
+		midBright,
+		"white",
+	]);
+
 	//update input colors
 	saturation.style.backgroundImage = `linear-gradient(to right,${scaleSat(
 		0
 	)},${scaleSat(1)})`;
+
+	brightness.style.backgroundImage = `linear-gradient(to right,${scaleBright(
+		0
+	)},${scaleBright(0.5)},${scaleBright(
+		1
+	)})`;
+
+	hue.style.backgroundImage = `linear-gradient(to right,rgb(204,75,75),rgb(204,204,75),rgb(75,204,75),rgb(75,204,204),rgb(75,75,204),rgb(204,75,204),rgb(204,75,75))`;
 }
+
+function hslControl(e) {
+	const index =
+		e.target.getAttribute(
+			"data-bright"
+		) ||
+		e.target.getAttribute("data-sat") ||
+		e.target.getAttribute("data-hue");
+	let slider =
+		e.target.parentElement.querySelectorAll(
+			'input[type="range"]'
+		);
+	const hue = slider[0];
+	const brightness = slider[1];
+	const saturation = slider[2];
+
+	const bgColor = initialColors[index];
+
+	let color = chroma(bgColor)
+		.set("hsl.s", saturation.value)
+		.set("hsl.l", brightness.value)
+		.set("hsl.h", hue.value);
+	colorDivs[
+		index
+	].style.backgroundColor = color;
+
+	//colorize sliders
+	colorizeSliders(
+		color,
+		hue,
+		brightness,
+		saturation
+	);
+}
+
+function updateTextUi(index) {
+	const activeDiv = colorDivs[index];
+	const color = chroma(
+		activeDiv.style.backgroundColor
+	);
+	const textHex =
+		activeDiv.querySelector("h2");
+	const icons =
+		activeDiv.querySelectorAll(
+			".controls button"
+		);
+	textHex.innerText = color.hex();
+	//check contrast
+	checkTextContrast(color, textHex);
+	for (i = 0; i < icons.length; i++) {
+		checkTextContrast(color, icons[i]);
+	}
+}
+
+function resetInputs() {
+	const slider =
+		document.querySelectorAll(
+			".sliders input"
+		);
+	sliders.forEach((slider) => {
+		if (slider.name === "hue") {
+			const hueColor =
+				initialColors[
+					slider.getAttribute(
+						"data-hue"
+					)
+				];
+			const hueValue =
+				chroma(hueColor).hsl()[0];
+			slider.value =
+				Math.floor(hueValue);
+		}
+		if (slider.name === "brightness") {
+			const brightColor =
+				initialColors[
+					slider.getAttribute(
+						"data-bright"
+					)
+				];
+			const brightValue = chroma(
+				brightColor
+			).hsl()[2];
+			slider.value =
+				Math.floor(brightValue * 100) /
+				100;
+		}
+		if (slider.name === "saturation") {
+			const satColor =
+				initialColors[
+					slider.getAttribute(
+						"data-sat"
+					)
+				];
+			const satValue =
+				chroma(satColor).hsl()[1];
+			slider.value =
+				Math.floor(satValue * 100) /
+				100;
+		}
+	});
+}
+
+function copyToClipboard(hex) {}
 
 randomColors();
 
