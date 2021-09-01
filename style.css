@@ -46,9 +46,9 @@ i {
 	width: 80%;
 	border-top-right-radius: 1rem;
 	border-top-left-radius: 1rem;
-	/* pointer-events: none;
+	pointer-events: none;
 	opacity: 0;
-	transform: translateY(100px); */
+	transform: translateY(100px);
 	transition: all 0.5s ease-in-out;
 }
 
@@ -145,6 +145,7 @@ input[type="range"] {
 	align-items: center;
 	opacity: 0;
 	pointer-events: none;
+	transition: all 0.7s ease;
 }
 
 .copy-popup {
@@ -154,7 +155,7 @@ input[type="range"] {
 	justify-content: space-evenly;
 	align-items: center;
 	border-radius: 2rem;
-	transition: transform 0.5s ease;
+	transition: all 0.7s ease;
 	transform: translateY(-2rem);
 	min-width: 40%;
 	min-height: 40vh;

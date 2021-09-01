@@ -11,6 +11,18 @@ const currentHexes =
 	document.querySelectorAll(
 		".color h2"
 	);
+const popup = document.querySelector(
+	".copy-container"
+);
+const adjustButton =
+	document.querySelectorAll(".adjust");
+const closeAdjustments =
+	document.querySelectorAll(
+		".close-adjustment"
+	);
+const sliderContainers =
+	document.querySelectorAll(".slider");
+
 let initialColors;
 
 //add event listeners
@@ -35,6 +47,37 @@ currentHexes.forEach((hex) => {
 		copyToClipboard(hex);
 	});
 });
+
+popup.addEventListener(
+	"transitionend",
+	() => {
+		const popupBox = popup.children[0];
+		popup.classList.remove("active");
+		popupBox.classList.remove("active");
+	}
+);
+
+adjustButton.forEach(
+	(button, index) => {
+		button.addEventListener(
+			"click",
+			() => {
+				openAdjustmentPanel(index);
+			}
+		);
+	}
+);
+
+closeAdjustments.forEach(
+	(close, index) => {
+		close.addEventListener(
+			"click",
+			() => {
+				closeAdjustmentPanel(index);
+			}
+		);
+	}
+);
 
 //FUNCTIONS
 
@@ -234,7 +277,31 @@ function resetInputs() {
 	});
 }
 
-function copyToClipboard(hex) {}
+function copyToClipboard(hex) {
+	const el =
+		document.createElement("textarea");
+	el.value = hex.innerText;
+	document.body.appendChild(el);
+	el.select();
+	document.execCommand("copy");
+	document.body.removeChild(el);
+	//Pop up animations
+	const popopBox = popup.children[0];
+	popup.classList.add("active");
+	popupBox.classList.add("active");
+}
+
+function openAdjustmentPanel(index) {
+	sliderContainers[
+		index
+	].classList.toggle("active");
+}
+
+function closeAdjustmentPanel(index) {
+	sliderContainers[
+		index
+	].classList.remove("active");
+}
 
 randomColors();
 
