@@ -27,6 +27,10 @@ const sliderContainers =
 
 let initialColors;
 
+//this is for local storage
+
+let savedPalettes = [];
+
 //add event listeners
 
 generateBtn.addEventListener(
@@ -87,6 +91,15 @@ closeAdjustments.forEach(
 	}
 );
 
+lockButton.forEach((button, index) => {
+	button.addEventListener(
+		`click`,
+		() => {
+			addLockClass(button, index);
+		}
+	);
+});
+
 //FUNCTIONS
 
 //Color generator
@@ -95,14 +108,40 @@ function generateHex() {
 	return hexColor;
 }
 
+function addLockClass(button, index) {
+	colorDivs[index].classList.toggle(
+		`locked`
+	);
+	lockButton[
+		index
+	].children[0].classList.toggle(
+		`fa-lock-open`
+	);
+	lockButton[
+		index
+	].children[0].classList.toggle(
+		`fa-lock`
+	);
+}
+
 function randomColors() {
 	initialColors = [];
 	colorDivs.forEach((div, index) => {
 		const hexText = div.children[0];
 		const randomColor = generateHex();
-		initialColors.push(
-			chroma(randomColor).hex()
-		);
+		//add it to array
+		if (
+			div.classList.contains("locked")
+		) {
+			initialColors.push(
+				hexText.innerText
+			);
+			return;
+		} else {
+			initialColors.push(
+				chroma(randomColor).hex()
+			);
+		}
 		//add the coloro to the bg
 		div.style.backgroundColor =
 			randomColor;
@@ -323,5 +362,7 @@ function closeAdjustmentPanel(index) {
 		index
 	].classList.remove("active");
 }
+
+//implement save to palette and local storage stuff
 
 randomColors();
