@@ -20,12 +20,20 @@ const closeAdjustments =
 	document.querySelectorAll(
 		".close-adjustment"
 	);
+const lockButton =
+	document.querySelectorAll(".lock");
 const sliderContainers =
 	document.querySelectorAll(".slider");
 
 let initialColors;
 
 //add event listeners
+
+generateBtn.addEventListener(
+	"click",
+	randomColors
+);
+
 sliders.forEach((slider) => {
 	slider.addEventListener(
 		"input",
@@ -122,6 +130,19 @@ function randomColors() {
 	});
 	//reset inputs
 	resetInputs();
+	//check for button contrast
+	adjustButton.forEach(
+		(button, index) => {
+			checkTextContrast(
+				initialColors[index],
+				button
+			);
+			checkTextContrast(
+				initialColors[index],
+				lockButton[index]
+			);
+		}
+	);
 }
 
 function checkTextContrast(
@@ -304,8 +325,3 @@ function closeAdjustmentPanel(index) {
 }
 
 randomColors();
-
-generateBtn.addEventListener(
-	"click",
-	randomColors
-);
