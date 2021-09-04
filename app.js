@@ -434,6 +434,12 @@ function savePalette(e) {
 	//Save to local storage
 	saveToLocal(savedPalettes);
 	saveInput.value = "";
+	//generate the palettes for lbrarary
+	const palette =
+		document.createElement("div");
+	pallete.classList.add(
+		"custom-palette"
+	);
 }
 
 function saveToLocal(savedPalettes) {
